@@ -1,9 +1,9 @@
 const {app, BrowserWindow, ipcMain, dialog} = require("electron");
 const fs = require("fs");
 const sharp = require("sharp");
-const dirName = "rezised";
+const dirName = "resized";
 const dirNameColor = "colored";
-const dirRiziseColor = "coloredRezised";
+const dirRiziseColor = "coloredResized";
 const jsonStorage = "params.json";
 
 function createWindow(){
@@ -78,7 +78,7 @@ function createWindow(){
             }
         });
     });
-    ipcMain.on("generateRezisedImg", function (event, args){
+    ipcMain.on("generateResizedImg", function (event, args){
         const size = args.value.split("*");
         const rawData = fs.readFileSync(jsonStorage, "utf-8");
         const imagePath = JSON.parse(rawData).imgPath;

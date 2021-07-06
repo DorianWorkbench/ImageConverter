@@ -32,7 +32,7 @@ validate.addEventListener('click', async function (){
                     return
                 }
                 if(resm.response === 0){
-                    ipcRenderer.send("generateRezisedImg", {value:res.value});
+                    ipcRenderer.send("generateResizedImg", {value:res.value});
                 }else{
                     res.value = "";
                     folderLink.innerText = "";
