@@ -3,7 +3,8 @@ const { dialog } = require('electron').remote
 
 const btn = document.getElementById('chooseFolder');
 const validate = document.getElementById('validate');
-const checkbox = document.getElementById('blackNwhite')
+const checkbox = document.getElementById('blackNwhite');
+
 validate.addEventListener('click', async function (){
 
         const res = document.querySelector("#resolutionSelect");
@@ -21,9 +22,13 @@ validate.addEventListener('click', async function (){
             }).then((resm)=>{
                 console.log("res");
                 console.log(resm.response);
-                if(checkbox.checked && resm.response === 0){
+                if(checkbox.checked && resm.response === 0 && res.value === ""){
                     console.log("checked");
                     ipcRenderer.send("generateBlackNWhite")
+                    return
+                }
+                if(checkbox.checked && resm.response === 0 && res.value !== ""){
+                    ipcRenderer.send("generateResizedBlackNwhite", {value:res.value})
                     return
                 }
                 if(resm.response === 0){

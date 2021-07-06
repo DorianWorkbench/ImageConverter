@@ -3,6 +3,7 @@ const fs = require("fs");
 const sharp = require("sharp");
 const dirName = "rezised";
 const dirNameColor = "colored";
+const dirRiziseColor = "coloredRezised";
 const jsonStorage = "params.json";
 
 function createWindow(){
@@ -52,6 +53,28 @@ function createWindow(){
                 sharp(pathImg)
                     .greyscale(true)
                     .toFile(imagePath + "\\" + dirNameColor + '\\image' + idx + '.jpg');
+            }
+        });
+    });
+    ipcMain.on("generateResizedBlackNwhite", function (event, args){
+        const size = args.value.split("*");
+        const rawData = fs.readFileSync(jsonStorage, "utf-8");
+        const imagePath = JSON.parse(rawData).imgPath;
+
+
+        if(!fs.existsSync(imagePath+"\\"+dirRiziseColor)){
+            fs.mkdirSync(imagePath+"\\"+dirRiziseColor);
+        }
+        const files = fs.readdirSync(imagePath);
+
+        files.forEach((elem, idx)=>{
+            // C'est pas la façon la plus optimisé d'éviter l'erreur dans la console mais ça marche
+            if(elem.split(".")[1]) {
+                let pathImg = imagePath + "\\" + elem;
+                sharp(pathImg)
+                    .resize(parseInt(size[0]), parseInt(size[1]))
+                    .greyscale(true)
+                    .toFile(imagePath + "\\" + dirRiziseColor + '\\image' + idx+"c" + '.jpg');
             }
         });
     });
