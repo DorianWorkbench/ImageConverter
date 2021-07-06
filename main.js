@@ -2,6 +2,7 @@ const {app, BrowserWindow, ipcMain, dialog} = require("electron");
 const fs = require("fs");
 const sharp = require("sharp");
 const dirName = "rezised";
+const dirNameColor = "colored";
 const jsonStorage = "params.json";
 
 function createWindow(){
@@ -36,24 +37,43 @@ function createWindow(){
             win.webContents.send("getRepositoryPath", path.filePaths);
         });
     });
+    ipcMain.on("generateBlackNWhite", function (event, args){
+        const rawData = fs.readFileSync(jsonStorage, "utf-8");
+        const imagePath = JSON.parse(rawData).imgPath;
+        if(!fs.existsSync(imagePath+"\\"+dirNameColor)){
+            fs.mkdirSync(imagePath+"\\"+dirNameColor);
+        }
 
+        const files = fs.readdirSync(imagePath);
+        files.forEach((elem, idx)=>{
+            // C'est pas la façon la plus optimisé d'éviter l'erreur dans la console mais ça marche
+            if(elem.split(".")[1]) {
+                let pathImg = imagePath + "\\" + elem;
+                sharp(pathImg)
+                    .greyscale(true)
+                    .toFile(imagePath + "\\" + dirNameColor + '\\image' + idx + '.jpg');
+            }
+        });
+    });
     ipcMain.on("generateRezisedImg", function (event, args){
         const size = args.value.split("*");
         const rawData = fs.readFileSync(jsonStorage, "utf-8");
         const imagePath = JSON.parse(rawData).imgPath;
 
-        const files = fs.readdirSync(imagePath);
 
         if(!fs.existsSync(imagePath+"\\"+dirName)){
             fs.mkdirSync(imagePath+"\\"+dirName);
         }
+        const files = fs.readdirSync(imagePath);
 
         files.forEach((elem, idx)=>{
-            let pathImg = imagePath+"\\"+elem;
-
-            sharp(pathImg)
-                .resize(parseInt(size[0]), parseInt(size[1]))
-                .toFile(imagePath+"\\"+dirName+'\\image'+idx+'.jpg');
+            // C'est pas la façon la plus optimisé d'éviter l'erreur dans la console mais ça marche
+            if(elem.split(".")[1]){
+                let pathImg = imagePath+"\\"+elem;
+                sharp(pathImg)
+                    .resize(parseInt(size[0]), parseInt(size[1]))
+                    .toFile(imagePath+"\\"+dirName+'\\image'+idx+'.jpg');
+            }
         });
     });
 }
