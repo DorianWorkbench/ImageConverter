@@ -36,6 +36,7 @@ validate.addEventListener('click', async function (){
                 }else{
                     res.value = "";
                     folderLink.innerText = "";
+                    folderLink.style.display = 'none';
                     checkbox.checked = false;
                 }
             });
