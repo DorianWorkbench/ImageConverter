@@ -13,7 +13,7 @@ validate.addEventListener('click', async function (){
         if(folderLink.innerText && (res.value !== "" || checkbox.checked)){
             dialog.showMessageBox({
                 title: "Confirmation",
-                message: "Voulez vous vraiment resize vos images ?",
+                message: "Voulez vous vraiment resize ou changer la couleur de vos images ?",
                 buttons: [
                     "Oui",
                     "Non"
